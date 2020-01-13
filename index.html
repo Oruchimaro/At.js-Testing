@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>test At.js</title>
+    <link rel="stylesheet" href="/css/jquery.atwho.css">
+    <style>
+        input {
+            margin: 4px;
+            padding: 10px;
+                border-radius: 5px;
+            width: 50%;
+                overflow: hidden;
+            background: #F1F8FF;
+        }
+        h1{
+        margin: 0;
+            color: #333;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        p{
+            font-size: 18px;
+                letter-spacing: 1px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Hot to use At.js with hard coded data</h1>
+    <p>Run a quick PHP server using this: $ php -S localhost:8001, then just go
+    to browser and type '@' and the name u want to mention</p>
+    <input type="text" id="inputor">
+
+
+    <h1>How to use At.js with ajax request</h1>
+    <p>Run a quick PHP server using this: $ php -S localhost:8001, then just go
+    to browser and type '@' and the name u want to mention, it will take data
+    from php file present as a json.the probelem is when we have a lot of users.
+    next input will use something called remoteFilter.</p>
+    <input type="text" id="inputajax">
+
+    <h1>How to use At.js with huge dataset</h1>
+    <p>when we have a lot of users.
+    next input will use something called remoteFilter.If we dont provide data,
+    it will trigger remoteFilter() method.there we can manulay perform a json
+    reqrequest, then we can set it up i various intervals</p>
+    <input type="text" id="inputbig">
+    <br><hr>
+    <h3>github repo <a href="https://github.com/ichord/At.js" target="_blank">HERE</a> </h3>
+    <h4>package docs: look at wiki</h4>
+
+
+    <script src="/js/jquery3.4.1.js"></script>
+    <script src="/js/caret.js"></script>
+    <script src="/js/jquery.atwho.js"></script>
+
+
+    <script>
+        $('#inputor').atwho({
+            at: "@",
+            data:['Peter', 'Tom', 'Anne']
+        });
+
+    //**************************************************************
+        $('#inputajax').atwho({
+            at: "@",
+            data: 'http://localhost:8001/person.php'
+        });
+    //**************************************************************
+        $('#inputbig').atwho({
+            at: "@",
+            delay: 1000, //delay the time that between queries
+            limit: 3,  //limit the number of items shown to user
+            callbacks: {
+                /*
+                If function is given, At.js will invoke it if local filter can not find any data
+                @param query [String] matched query
+                @param callback [Function] callback to render page.
+                */
+                remoteFilter: function(query, callback) {
+                    console.log(' remoteFilter IS Called !!!');
+
+                    $.getJSON("/users.php", {q: query}, function(usernames) {
+                        callback(usernames)
+                    });
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
